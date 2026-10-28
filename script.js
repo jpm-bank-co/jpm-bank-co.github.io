@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } = await supabaseClient.auth.getUser();
 
         if (authError || !user) {
-            alert("Veuillez vous connecter avant d'envoyer une demande.");
+            alert("Please log in before submitting a request.");
             window.location.href = "login.html";
             return;
         }
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!fullName || !email || !country || !phone ||
             !helpType || !message || !Number.isFinite(amount) || amount < 0) {
-            alert("Veuillez remplir correctement tous les champs.");
+            alert("Please complete all fields correctly.");
             return;
         }
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .single();
 
         if (profileError || !profile) {
-            alert("Votre profil est introuvable. Veuillez contacter l'administrateur.");
+            alert("Your profile could not be found. Please contact the administrator.");
             return;
         }
 
@@ -59,12 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
         if (error) {
-            console.error("Erreur Supabase :", error);
-            alert("La demande n'a pas été enregistrée. Vérifiez les colonnes et les autorisations Supabase.");
+            console.error("Supabase error:", error);
+            alert("Your request could not be saved. Please check the database configuration and permissions.");
             return;
         }
 
-        alert("Votre demande a été enregistrée.");
+        alert("Your request has been submitted successfully.");
         helpForm.reset();
     });
 });
