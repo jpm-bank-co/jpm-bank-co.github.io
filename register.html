@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Créer un compte | JPM BANK & Co.</title>
+  <title>Create an Account | JPM BANK & Co.</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -56,30 +56,30 @@
 <body>
   <main class="card">
     <h1>JPM BANK & Co.</h1>
-    <p>Créez votre compte pour envoyer des demandes et échanger des messages.</p>
+    <p>Create your account to submit requests and exchange messages.</p>
 
     <form id="registerForm">
-      <label for="fullName">Nom complet</label>
+      <label for="fullName">Full Name</label>
       <input id="fullName" type="text" autocomplete="name"
         maxlength="120" required>
 
-      <label for="email">Adresse e-mail</label>
+      <label for="email">Email Address</label>
       <input id="email" type="email" autocomplete="email"
         maxlength="254" required>
 
-      <label for="password">Mot de passe</label>
+      <label for="password">Password</label>
       <input id="password" type="password" autocomplete="new-password"
         minlength="8" required>
-      <p>Utilisez au moins 8 caractères.</p>
+      <p>Use at least 8 characters.</p>
 
-      <button id="submitButton" type="submit">Créer mon compte</button>
+      <button id="submitButton" type="submit">Create Account</button>
     </form>
 
     <p id="message" class="message" role="status" aria-live="polite"></p>
 
     <div class="links">
-      <p>Vous avez déjà un compte ? <a href="login.html">Se connecter</a></p>
-      <p><a href="index.html">Retour au site</a></p>
+      <p>Already have an account? <a href="login.html">Log In</a></p>
+      <p><a href="index.html">Back to Website</a></p>
     </div>
   </main>
 
@@ -111,12 +111,12 @@
         document.getElementById("password").value;
 
       if (!fullName || !email || password.length < 8) {
-        message.textContent = "Vérifiez les informations saisies.";
+        message.textContent = "Please check the information you entered.";
         return;
       }
 
       button.disabled = true;
-      message.textContent = "Création du compte en cours…";
+      message.textContent = "Creating your account…";
 
       try {
         const { data, error } = await client.auth.signUp({
@@ -132,16 +132,16 @@
 
         if (data.session) {
           message.textContent =
-            "Compte créé. Vous êtes connecté.";
+            "Account created. You are now signed in.";
         } else {
           message.textContent =
-            "Demande d’inscription envoyée. Consultez votre e-mail pour confirmer votre compte avant de vous connecter.";
+            "Registration submitted. Check your email to confirm your account before logging in.";
         }
 
         form.reset();
       } catch (error) {
         message.textContent =
-          "Inscription impossible. Vérifiez les informations ou réessayez plus tard.";
+          "Registration failed. Please check your information or try again later.";
       } finally {
         button.disabled = false;
       }
