@@ -33,13 +33,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const { data: profile, error: profileError } =
-            await supabaseClient
-                .from("profiles")
-                .select("id")
-                .eq("user_id", user.id)
-                .single();
+    await supabaseClient
+        .from("profiles")
+        .select("id")
+        .eq("user_id", user.id)
+        .single();
 
-        if (profileError || !profile) {
+if (profileError || !profile) {
     console.error("Profile lookup failed:", {
         message: profileError?.message,
         code: profileError?.code,
@@ -48,22 +48,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     alert("Profile lookup failed. Please check the browser console.");
     return;
-            }
-        }
+}
 
-        const { error } = await supabaseClient
-            .from("requests")
-            .insert({
-                user_id: profile.id,
-                full_name: fullName,
-                email: email,
-                country: country,
-                phone: phone,
-                help_type: helpType,
-                amount: amount,
-                message: message,
-                status: "pending"
-            });
+const { error } = await supabaseClient
+    .from("requests")
+    .insert({
+        user_id: profile.id,
+        full_name: fullName,
+        email: email,
+        country: country,
+        phone: phone,
+        help_type: helpType,
+        amount: amount,
+        message: message,
+        status: "pending"
+    });
 
         if (error) {
             console.error("Supabase error:", error);
