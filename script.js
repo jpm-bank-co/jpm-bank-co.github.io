@@ -46,7 +46,12 @@ if (profileError || !profile) {
         userId: user.id
     });
 
-    alert("Profile lookup failed. Please check the browser console.");
+  alert(
+    "Profile error: " +
+    (profileError?.message || "Profile not found") +
+    " | Code: " +
+    (profileError?.code || "none")
+);  
     return;
 }
 
