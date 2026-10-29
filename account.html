@@ -1,1 +1,158 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account | JPM BANK & Co.</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: white;
+    }
+    main { max-width: 850px; margin: 35px auto; }
+    .card {
+      background: #1d293b;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+    }
+    h1, h2 { color: white; }
+    p { color: #cbd5e1; line-height: 1.6; }
+    button, .link {
+      display: inline-block;
+      padding: 12px 18px;
+      margin: 8px 5px 8px 0;
+      border: 0;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .request {
+      padding: 15px 0;
+      border-bottom: 1px solid #526174;
+    }
+    .status { color: #93c5fd; font-weight: bold; }
+    #message { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="card">
+    <h1>My Account</h1>
+    <p>Welcome to your JPM BANK & Co. account.</p>
+    <p id="email">Loading account...</p>
+    <a class="link" href="index.html">Back to Website</a>
+    <a class="link" href="index.html">Submit a New Request</a>
+    <button id="logout">Log Out</button>
+  </section>
+
+  <section class="card">
+    <h2>My Requests</h2>
+    <p id="message">Loading your requests...</p>
+    <div id="requests"></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://jtzmvjwtmpndwokpiugs.supabase.co";
+const SUPABASE_ANON_KEY =
+  "sb_publishable_DV5yVeijQ7dfGxT7RFb4Ag_7NMTS-UZ";
+
+const client = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+async function loadAccount() {
+  const message = document.getElementById("message");
+  const requestsBox = document.getElementById("requests");
+
+  const { data: { user }, error: authError } =
+    await client.auth.getUser();
+
+  if (authError || !user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("email").textContent =
+    "Email: " + user.email;
+
+  const { data: profile, error: profileError } = await client
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (profileError || !profile) {
+    message.textContent =
+      "Your profile could not be loaded. Please contact support.";
+    return;
+  }
+
+  const { data, error } = await client
+    .from("requests")
+    .select("id, created_at, help_type, status, message")
+    .eq("user_id", profile.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    message.textContent = "Unable to load your requests.";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    message.textContent = "You have not submitted any requests yet.";
+    return;
+  }
+
+  message.textContent = "Your submitted requests:";
+
+  data.forEach(request => {
+    const item = document.createElement("div");
+    item.className = "request";
+
+    const title = document.createElement("h3");
+    title.textContent = request.help_type || "Request";
+
+    const status = document.createElement("p");
+    status.className = "status";
+    status.textContent = "Status: " + request.status;
+
+    const date = document.createElement("p");
+    date.textContent = "Date: " +
+      new Date(request.created_at).toLocaleString();
+
+    const detail = document.createElement("p");
+    detail.textContent = request.message || "";
+
+    item.append(title, status, date, detail);
+    requestsBox.appendChild(item);
+  });
+}
+
+document.getElementById("logout").addEventListener("click", async () => {
+  const { error } = await client.auth.signOut();
+
+  if (error) {
+    alert("Unable to log out. Please try again.");
+    return;
+  }
+
+  window.location.href = "login.html";
+});
+
+loadAccount();
+</script>
+</body>
+  </html>
+                                 
