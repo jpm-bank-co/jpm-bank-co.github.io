@@ -70,9 +70,14 @@ const { error } = await supabaseClient
     });
 
         if (error) {
-            console.error("Supabase error:", error);
-            alert("Your request could not be saved. Please check the database configuration and permissions.");
-            return;
+    console.error("Supabase error:", error);
+    alert(
+        "Request error: " +
+        error.message +
+        " | Code: " +
+        (error.code || "none")
+    );
+    return;
         }
 
         alert("Your request has been submitted successfully.");
