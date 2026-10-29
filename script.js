@@ -40,8 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 .single();
 
         if (profileError || !profile) {
-            alert("Your profile could not be found. Please contact the administrator.");
-            return;
+    console.error("Profile lookup failed:", {
+        message: profileError?.message,
+        code: profileError?.code,
+        userId: user.id
+    });
+
+    alert("Profile lookup failed. Please check the browser console.");
+    return;
+            }
         }
 
         const { error } = await supabaseClient
