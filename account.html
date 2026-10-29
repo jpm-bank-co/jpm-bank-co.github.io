@@ -101,7 +101,7 @@ async function loadAccount() {
 
   const { data, error } = await client
     .from("requests")
-    .select("id, created_at, help_type, status, message")
+    .select("id, created_at, full_name, email, country, phone, help_type, amount, status, message")
     .eq("user_id", profile.id)
     .order("created_at", { ascending: false });
 
@@ -135,7 +135,33 @@ async function loadAccount() {
     const detail = document.createElement("p");
     detail.textContent = request.message || "";
 
-    item.append(title, status, date, detail);
+    const name = document.createElement("p");
+name.textContent = "Full name: " + (request.full_name || "Not provided");
+
+const email = document.createElement("p");
+email.textContent = "Email: " + (request.email || "Not provided");
+
+const country = document.createElement("p");
+country.textContent = "Country: " + (request.country || "Not provided");
+
+const phone = document.createElement("p");
+phone.textContent = "Phone: " + (request.phone || "Not provided");
+
+const amount = document.createElement("p");
+amount.textContent = "Amount: " +
+  (request.amount != null ? request.amount : "Not provided");
+
+item.append(
+  title,
+  status,
+  date,
+  name,
+  email,
+  country,
+  phone,
+  amount,
+  detail
+);
     requestsBox.appendChild(item);
   });
 }
